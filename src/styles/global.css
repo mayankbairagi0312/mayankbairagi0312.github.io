@@ -1,0 +1,58 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-soviet-red: #D9281C;
+  --color-brutal-yellow: #FFDE4D;
+  --color-void-black: #0C0C0C;
+  --color-paper-cream: #F2EFE9;
+  --color-border-dark: #2A2A2A;
+
+  --color-surface-dark: #1A1A1A;
+  --font-sans: "Inter", sans-serif;
+  --font-mono: "Space Mono", monospace;
+}
+
+@layer base {
+  /* Strictly sharp corners everywhere */
+  *, *::before, *::after { 
+    border-radius: 0px !important; 
+  }
+  
+  body {
+    background-color: var(--color-void-black);
+    color: var(--color-paper-cream);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: var(--color-paper-cream);
+    color: var(--color-void-black);
+  }
+}
+
+/* Custom utilitarian links */
+.link-raw {
+  color: var(--color-soviet-red);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1.5px;
+  transition: all 150ms ease-in-out;
+}
+.link-raw:hover {
+  background-color: var(--color-soviet-red);
+  color: #FFFFFF;
+  text-decoration: none;
+}
+
+/* Micro-noise overlay */
+/* .noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+} */
