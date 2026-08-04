@@ -12,23 +12,23 @@ const { title, description, tags } = project.data;
 const { Content } = await render(project);
 ---
 <BaseLayout title={title}>
-  <main class="flex-grow bg-paper-cream py-12 px-4 md:px-8 min-h-screen">
+  <main class="flex-grow bg-void-black py-12 px-4 md:px-8 min-h-screen">
     <div class="max-w-4xl mx-auto">
       
       <!-- Back Link -->
-      <a href="/projects" class="font-mono text-xs uppercase text-void-black hover:text-soviet-red underline underline-offset-4 mb-8 inline-block font-bold">
+      <a href="/projects" class="font-mono text-xs uppercase text-paper-cream/60 hover:text-soviet-red underline underline-offset-4 mb-8 inline-block font-bold">
         [ ← Back to Deployments ]
       </a>
 
       <!-- High Contrast Article Container -->
-      <article class="bg-white border-4 border-void-black p-8 md:p-12 relative overflow-hidden flex flex-col gap-6 shadow-[12px_12px_0px_#D9281C]">
+      <article class="bg-surface-dark border-4 border-border-dark p-8 md:p-12 relative overflow-hidden flex flex-col gap-6 shadow-[8px_8px_0px_#2A2A2A]">
         
-        <h1 class="text-3xl md:text-5xl font-bold font-mono uppercase tracking-tighter text-void-black border-b-4 border-soviet-red pb-6 mb-4">
+        <h1 class="text-4xl md:text-5xl font-bold font-boldonse tracking-tighter text-paper-cream border-b-4 border-soviet-red pb-6 mb-4">
           {title}
         </h1>
         
         {description && (
-          <p class="text-lg text-gray-700 mb-4 font-mono border-l-4 border-soviet-red pl-4">
+          <p class="text-lg text-paper-cream/70 mb-4 font-mono border-l-4 border-soviet-red pl-4">
             {description}
           </p>
         )}
@@ -45,15 +45,19 @@ const { Content } = await render(project);
 
         <!-- Markdown Renderer with clean contrast styling -->
         <div class="prose max-w-none 
-          prose-p:font-sans prose-p:text-void-black/85 prose-p:leading-relaxed prose-p:text-base prose-p:mb-6
-          prose-headings:font-mono prose-headings:font-bold prose-headings:uppercase prose-headings:text-void-black prose-headings:tracking-tight prose-headings:mt-8 prose-headings:mb-4
-          prose-a:text-soviet-red prose-a:font-bold prose-a:underline hover:bg-soviet-red hover:text-white
-          prose-code:bg-gray-100 prose-code:text-soviet-red prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:text-sm prose-code:before:content-none prose-code:after:content-none
-          prose-pre:bg-void-black prose-pre:text-paper-cream prose-pre:p-4 prose-pre:border-2 prose-pre:border-void-black prose-pre:shadow-[4px_4px_0px_#D9281C]
-          prose-img:border-4 prose-img:border-void-black
-          prose-strong:text-void-black prose-strong:font-bold
+          prose-p:font-sans prose-p:text-paper-cream/85 prose-p:leading-relaxed prose-p:text-base prose-p:mb-6
+          prose-headings:font-mono prose-headings:font-bold prose-headings:text-paper-cream prose-headings:tracking-tight prose-headings:mt-8 prose-headings:mb-4
+          prose-h2:text-2xl prose-h2:border-b-2 prose-h2:border-border-dark prose-h2:pb-2
+          prose-h3:text-xl
+          prose-a:text-paper-cream prose-a:font-bold prose-a:underline  hover:text-paper-cream
+          prose-code:text-brutal-yellow prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:text-sm prose-code:before:content-none prose-code:after:content-none
+          prose-pre:!bg-void-black prose-pre:text-paper-cream prose-pre:p-4 prose-pre:border-2 prose-pre:border-void-black prose-pre:shadow-[4px_4px_0px_#FFFFFF]
+          prose-img:border-4 prose-img:border-border-dark
+          prose-strong:text-paper-cream prose-strong:font-bold
           prose-ul:list-disc prose-ul:pl-5 prose-ol:list-decimal prose-ol:pl-5
-          prose-li:text-void-black/85 prose-li:font-sans prose-li:mb-2">
+          prose-li:text-paper-cream/85 prose-li:font-sans prose-li:mb-2
+          prose-blockquote:border-l-4 prose-blockquote:border-soviet-red prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-paper-cream/70
+          prose-hr:border-border-dark">
           <Content />
         </div>
 

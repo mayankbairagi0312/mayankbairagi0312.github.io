@@ -7,30 +7,29 @@ const projects = (await getCollection('projects'))
   .sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
 ---
 <BaseLayout title="Systems Deployments">
-  <main class="flex-grow bg-paper-cream text-void-black flex flex-col">
+  <main class="flex-grow bg-void-black text-paper-cream flex flex-col">
     
     <!-- Hero Header -->
-    <div class="p-8 md:p-12 lg:p-16 border-b-4 border-void-black bg-soviet-red text-paper-cream relative overflow-hidden">
-      <!-- Background stripes for Soviet Brutalism feel -->
+    <div class="p-8 md:p-12 lg:p-12 border-b-4 border-border-dark bg-soviet-red text-paper-cream relative overflow-hidden">
       <div class="absolute inset-0 opacity-20 bg-stripes-red pointer-events-none"></div>
       
       <div class="relative z-10">
-        <h1 class="font-mono font-black text-5xl md:text-7xl uppercase tracking-tight mb-6 drop-shadow-[4px_4px_0px_#0C0C0C]">
+        <h1 class="font-boldonse font-bold text-2xl md:text-4xl uppercase tracking-tight mb-6 drop-shadow-[4px_4px_0px_#0C0C0C]">
           Deployments.
         </h1>
-        <p class="font-mono text-sm md:text-base max-w-2xl font-bold bg-void-black text-paper-cream p-4 border-2 border-void-black shadow-[4px_4px_0px_#0C0C0C] inline-block">
+        <p class="font-mono text-sm md:text-base max-w-2xl font-bold  text-paper-cream inline-block">
           Complete system engineering files, math libraries, performance graphs, and custom execution engines.
         </p>
       </div>
     </div>
 
     <!-- Projects Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-b-4 border-void-black bg-paper-cream">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-b-4 border-border-dark bg-void-black">
       {projects.map((proj, idx) => (
-        <div class="border-b-4 md:border-b-0 border-r-0 md:border-r-4 border-void-black flex flex-col justify-between p-8 hover:bg-void-black hover:text-paper-cream transition-colors duration-200 group bg-white">
+        <div class="border-b-4 md:border-b-0 border-r-0 md:border-r-4 border-border-dark flex flex-col justify-between p-8 hover:bg-void-black hover:text-paper-cream transition-colors duration-200 group bg-surface-dark">
           <div>
-            <span class="font-mono text-xs text-gray-500 group-hover:text-paper-cream/50 font-bold tracking-widest">INDEX_0{idx + 1}</span>
-            <h2 class="font-mono font-black text-3xl mt-4 mb-3 tracking-tight uppercase group-hover:text-soviet-red">
+            <span class="font-mono text-xs text-paper-cream/60 group-hover:text-paper-cream/70 font-bold tracking-widest">INDEX_0{idx + 1}</span>
+            <h2 class="font-boldonse font-semi text-2xl mt-4 mb-3 tracking-tight group-hover:text-soviet-red">
               {proj.data.title}
             </h2>
             <p class="text-sm font-sans mb-8 leading-relaxed opacity-80 group-hover:text-paper-cream/80">
@@ -38,7 +37,7 @@ const projects = (await getCollection('projects'))
             </p>
           </div>
           
-          <div class="flex justify-between items-center pt-6 border-t-2 border-void-black group-hover:border-paper-cream/20 mt-auto">
+          <div class="flex justify-between items-center pt-6 border-t-2 border-border-dark group-hover:border-paper-cream/20 mt-auto">
             <span class="font-mono text-xs uppercase opacity-60 font-bold">{proj.data.tags?.join(" / ") || "SYSTEMS"}</span>
             <!-- FIXED: Changed proj.slug to proj.id -->
             <a href={`/projects/${proj.id}`} class="font-mono text-xs uppercase font-black text-soviet-red group-hover:text-soviet-red hover:underline hover:underline-offset-4 decoration-2">

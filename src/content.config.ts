@@ -1,4 +1,5 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection} from 'astro:content';
+import { z } from "astro/zod";
 import { glob } from 'astro/loaders';
 
 // 1. Define the Blog collection using the new glob loader
@@ -20,6 +21,7 @@ const projects = defineCollection({
     title: z.string(),
     description: z.string().optional(),
     tags: z.array(z.string()).optional(),
+     github: z.url().optional(),
     order: z.number().optional().default(0),
   })
 });
@@ -28,4 +30,17 @@ const projects = defineCollection({
 export const collections = {
   blog,
   projects
+};
+
+
+export default {
+  content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
+  theme: {
+    extend: {
+      fontFamily: {
+        boldonse: ['Boldonse'],
+      },
+    },
+  },
+  plugins: [],
 };

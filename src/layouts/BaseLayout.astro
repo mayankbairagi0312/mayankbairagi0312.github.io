@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-
+import '@fontsource/boldonse';
 export interface Props {
   title: string;
   description?: string;
@@ -29,7 +29,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://bairagi.
     <div class="max-w-[1440px] mx-auto border-t-0 md:border border-border-dark bg-void-black shadow-none md:shadow-[12px_12px_0px_#0C0C0C] flex flex-col min-h-screen">
       
       <!-- STICKY HEADER -->
-      <header class="sticky top-0 z-50 grid grid-cols-1 md:grid-cols-12 border-b-4 border-void-dark font-mono uppercase bg-void-black">
+      <header class="sticky top-0 z-50 grid grid-cols-1 md:grid-cols-12 border-b-4 border-paper-cream font-mono uppercase bg-void-black">
         
         <!-- Brand Signature -->
         <div class="p-6 col-span-1 md:col-span-4 border-b md:border-b-0 md:border-r border-void-dark flex items-center bg-surface-dark">
@@ -70,12 +70,12 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://bairagi.
       <slot />
 
       <!-- FOOTER -->
-      <footer class="border-t-4 border-void-dark grid grid-cols-1 md:grid-cols-3 p-6 font-mono text-xs uppercase bg-surface-dark mt-auto">
+      <footer class="border-t-4 border-paper-cream grid grid-cols-1 md:grid-cols-3 p-6 font-mono text-xs uppercase bg-surface-dark mt-auto">
         <div class="text-gray-500 flex items-center">
           © 2026 MAYANK BAIRAGI. CORE CODEBASE.
         </div>
         <div class="text-left md:text-center text-gray-500 my-4 md:my-0 flex items-center justify-start md:justify-center">
-          ENGINE: ASTRO v4.x + CSS
+          ENGINE: ASTRO v4.x + CSS + ❤️
         </div>
         <div class="md:text-right flex items-center justify-start md:justify-end gap-2">
           COMPILATION: <span class="bg-void-black text-[#00FF41] font-bold px-3 py-1 text-[10px]">SUCCESS</span>

@@ -7,10 +7,10 @@
   --color-void-black: #0C0C0C;
   --color-paper-cream: #F2EFE9;
   --color-border-dark: #2A2A2A;
-
   --color-surface-dark: #1A1A1A;
   --font-sans: "Inter", sans-serif;
   --font-mono: "Space Mono", monospace;
+  --font-boldonse: "Boldonse", sans-serif;
 }
 
 @layer base {
@@ -46,6 +46,7 @@
   color: #FFFFFF;
   text-decoration: none;
 }
+
 
 /* Micro-noise overlay */
 /* .noise-overlay {
