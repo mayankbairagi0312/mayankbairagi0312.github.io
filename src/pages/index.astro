@@ -13,52 +13,148 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 <BaseLayout title="Systems & Graphics Portfolio">
   <main class="flex-grow">
 
+    <!-- GREETING -->
+    <section class="border-b-4 border-border-dark bg-surface-dark">
+      <div class="p-12 md:p-20 text-center">
+        <h1 class="font-mono font-bold text-3xl md:text-5xl text-paper-cream tracking-tight mb-3">
+          Hi there!
+        </h1>
+        <p class="font-mono text-sm md:text-base text-gray-400 uppercase tracking-wide">
+          Mayank Bairagi — Systems & Graphics Programmer
+        </p>
+      </div>
+    </section>
 
-    <section class="border-b-6 border-border-dark grid grid-cols-1 lg:grid-cols-12 min-h-[65vh]">
-      
-      <div class="p-8 md:p-12 lg:p-16 col-span-1 lg:col-span-6 flex flex-col justify-between border-b lg:border-b-0 lg:border-r-4 border-border-dark bg-surface-dark">
-        <div>
-          <span class="font-mono text-xs uppercase tracking-widest mb-6 border-2 text-soviet-red border-soviet-red inline-block px-3 py-1 font-bold">
-            Systems & Graphics Programmer
-          </span>
-          <h1 class="font-boldonse font-normal  text-6xl md:text-8xl lg:text-8xl leading-tight tracking-tighter mb-8 text-paper-cream">
-            Mayank<br/>Bairagi
-          </h1>
-        </div>
-        <div class="mt-8 lg:mt-0 max-w-xl">
-          <p class="font-mono text-xs uppercase tracking-wider text-gray-500 mb-2">/ PROFESSIONAL PROFILE</p>
-          <p class="font-sans text-lg md:text-xl leading-relaxed text-gray-300 font-medium">
-            Engineering robust deterministic physics solvers, vector mathematics, SIMD optimization matrices, and customizable GPU render pipelines.
-            High performance is not optional.
-          </p>
-        </div>
+    <!-- LATEST LOGS -->
+    <section id="logbook" class="border-b-4 border-border-dark bg-surface-dark/20">
+      <div class="p-6 border-b-2 border-border-dark font-mono text-xl uppercase bg-surface-dark text-white relative text-center">
+        <span class="font-bold">// Latest Logs</span>
+        <a href="/blog" class="absolute right-6 top-1/2 -translate-y-1/2 text-sm font-bold underline hover:text-soviet-red">ARCHIVE ↗</a>
       </div>
 
-      <div class="col-span-1 lg:col-span-6 flex flex-col justify-between bg-void-black relative overflow-hidden min-h-[450px]">
-        
-        <div class="p-4 border-b border-border-dark font-mono text-[10px] text-gray-400 uppercase flex justify-between z-10 bg-surface-dark/90 backdrop-blur">
-          <span>IDENTITY CORE // DIGITAL PRESENCE</span>
-          <span class="text-emerald-500 font-bold">VERIFIED STATUS: ACTIVE</span>
-        </div>
-        
-        <div class="flex-grow flex flex-col items-center justify-center p-8 bg-void-black relative">
-          <div class="absolute inset-0 opacity-5 pointer-events-none bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:16px_16px]"></div>
-          
-          <div class="relative w-56 h-56 md:w-64 md:h-64 rounded-full border-4 border-border-dark bg-surface-dark flex items-center justify-center overflow-hidden shadow-2xl z-10">
-            <div class="absolute inset-2 rounded-full border border-border-dark/60"></div>
-            <div class="absolute inset-4 rounded-full border border-dashed border-border-dark/40"></div>
-            
-            
+      <div class="p-8 md:p-12 max-w-7xl mx-auto">
+        {posts.length > 0 ? (
+          <div class="flex flex-wrap justify-center gap-6">
+            {posts.slice(0, 3).map((post) => (
+              <a 
+                href={`/blog/${post.id}`} 
+                class="w-full md:w-80 lg:w-96 border-2 border-border-dark bg-surface-dark hover:-translate-y-1 hover:shadow-[4px_4px_0px_#D9281C] transition-all duration-200 p-6 flex flex-col group"
+              >
+                <div class="flex justify-between items-start mb-4 gap-2">
+                  <time datetime={post.data.date.toISOString()} class="font-mono text-xs text-gray-500 uppercase tracking-wider">
+                    {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                  </time>
+                  {post.data.tags && post.data.tags.length > 0 && (
+                    <span class="font-mono text-[10px] bg-void-black text-paper-cream px-2 py-0.5 border border-border-dark truncate">
+                      {post.data.tags[0]}
+                    </span>
+                  )}
+                </div>
+                
+                <h3 class="font-bold text-lg text-paper-cream group-hover:text-soviet-red transition-colors mb-3 leading-snug line-clamp-2">
+                  {post.data.title}
+                </h3>
+                
+                <div class="mt-auto pt-4 flex items-center gap-2 font-mono text-xs font-bold text-gray-400 group-hover:text-soviet-red transition-colors">
+                  <span>READ LOG</span>
+                  <span class="group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+              </a>
+            ))}
           </div>
+        ) : (
+          <div class="p-12 text-center border-2 border-dashed border-border-dark font-mono text-sm text-gray-500 bg-surface-dark">
+            No logs captured. Put markdown log sheets under src/content/blog/
+          </div>
+        )}
+      </div>
+    </section>
 
-          <div class="mt-8 w-full max-w-sm flex flex-wrap justify-center gap-5 font-mono text-[11px] uppercase z-10">
+    <!-- PROJECTS -->
+    <section id="projects" class="border-b-4 border-border-dark bg-void-black">
+      <div class="p-6 border-b-2 border-border-dark font-mono text-xl uppercase bg-surface-dark text-white relative text-center">
+        <span class="font-bold">// PROJECTS</span>
+        <span class="absolute right-6 top-1/2 -translate-y-1/2 text-sm">[0{projects.length} UNITS]</span>
+      </div>
+      
+      {projects.length > 0 ? (
+        <div class="grid grid-cols-1 divide-y-2 divide-border-dark border-b border-border-dark">
+          {projects.map((proj, idx) => {
+            const colors = "bg-surface-dark/20 text-white";
+            const bgClass = colors;
+            return (
+              <div class="relative flex flex-col justify-between group">
+                {/* Main Overlay Link - Covers the entire card */}
+                <a href={`/projects/${proj.id}`} class="absolute inset-0 z-0" aria-label={proj.data.title}></a>
+
+                {/* Top Block */}
+                <div class={`h-72 p-7 md:p-8 flex flex-col justify-between border-b-2 border-border-dark ${bgClass} group-hover:bg-void-black transition-colors duration-200`}>
+                  <span class="font-mono text-xs uppercase tracking-widest opacity-80">_0{idx + 1}</span>
+                  <div class="mb-6">
+                    <h3 class="font-boldonse font-bold text-xl md:text-2xl mb-2 tracking-tight leading-snug">{proj.data.title}</h3>
+                    <p class="font-mono text-sm opacity-90 ">{proj.data.description || "Performance module specs."}</p>
+                  </div>
+                </div>
+
+                {/* Bottom Bar */}
+                <div class="p-4 flex justify-between items-center bg-surface-dark">
+                  <span class="font-mono text-xs text-gray-500 uppercase tracking-wider">{proj.data.tags?.join(" / ") || "Systems"}</span>
+                  
+                  <div class="flex items-center gap-4">
+                    {proj.data.github ? (
+                      /* Higher z-index allows GITHUB link to be clicked independently */
+                      <a 
+                        href={proj.data.github} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        class="font-mono font-bold text-xs text-gray-400 transition-colors link-raw relative z-10"
+                      >
+                        GITHUB ↗
+                      </a>
+                    ) : (
+                      <span class="font-mono text-xs text-gray-600">No repo</span>
+                    )}
+                  </div>  
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div class="p-16 text-center font-mono text-sm text-gray-500 bg-surface-dark">
+          No project matrices compiled. Define project records under src/content/projects/
+        </div>
+      )}
+    </section>
+
+    <!-- ABOUT ME -->
+    <section class="border-b-4 border-border-dark bg-surface-dark">
+      <div class="p-6 border-b-2 border-border-dark font-mono text-xl uppercase bg-surface-dark text-white text-center">
+        <span class="font-bold">// About Me</span>
+      </div>
+
+      <div class="p-8 md:p-12 lg:p-16 flex flex-col-reverse md:flex-row gap-8 md:gap-12 items-start">
+
+        <!-- Name, about, contact -->
+        <div class="flex-1 min-w-0">
+          <span class="font-mono text-xs uppercase tracking-widest mb-3 border-2 text-soviet-red border-soviet-red inline-block px-3 py-1 font-bold">
+            Systems & Graphics Programmer
+          </span>
+          <h2 class="font-boldonse font-normal text-base md:text-3xl tracking-tight mb-4 mt-4 text-paper-cream">
+            Mayank Bairagi
+          </h2>
+          <p class="font-sans text-base md:text-lg leading-relaxed text-gray-300 font-medium max-w-2xl mb-6">
+            Engineering robust deterministic physics solvers, vector mathematics, SIMD optimization matrices, and customizable GPU render pipelines.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-5 font-mono text-[11px] uppercase mb-6">
             <a href="https://linkedin.com/in/mayankbairagi" target="_blank" class="flex items-center gap-1.5 text-paper-cream hover:text-soviet-red transition-colors">
               <svg class="w-4 h-4 text-soviet-red" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
               </svg>
               <span>LINKEDIN ↗</span>
             </a>
-            
+
             <a href="https://github.com/mayankbairagi0312" target="_blank" class="flex items-center gap-1.5 text-paper-cream hover:text-soviet-red transition-colors">
               <svg class="w-4 h-4 text-soviet-red" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
@@ -74,116 +170,21 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
             </a>
           </div>
 
-          <div class="mt-6 w-full max-w-sm z-10">
-            <a href="/resume.pdf" download class="w-full py-3 px-4 border-2 border-border-dark bg-surface-dark text-paper-cream font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-between hover:bg-paper-cream hover:text-void-black hover:border-paper-cream transition-all group">
-              <span class="flex items-center gap-2">
-                <svg class="w-4 h-4 text-soviet-red group-hover:text-void-black transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"></path>
-                </svg>
-                DOC_LINK // DOWNLOAD RESUME
-              </span>
-              <span>↗</span>
-            </a>
-          </div>
+          <a href="/resume.pdf" download class="inline-flex items-center gap-2 py-2.5 px-4 border-2 border-border-dark bg-void-black text-paper-cream font-mono text-xs font-bold uppercase tracking-wider hover:bg-paper-cream hover:text-void-black hover:border-paper-cream transition-all group">
+            <svg class="w-4 h-4 text-soviet-red group-hover:text-void-black transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"></path>
+            </svg>
+            <span>DOC_LINK // DOWNLOAD RESUME</span>
+          </a>
         </div>
 
-        <div class="p-4 border-t border-border-dark font-mono text-[10px] text-paper-cream bg-surface-dark flex justify-between">
-          <span>CONTACT GATE: ONLINE</span>
-          <span class="text-brutal-yellow font-bold">COMMISSIONS: OPEN</span>
+        <!-- Photo -->
+        <div class="w-40 h-40 md:w-56 md:h-56 rounded-full border-4 border-border-dark bg-void-black flex-shrink-0 overflow-hidden self-center md:self-start">
+          <!-- Drop your photo in: <img src="/your-photo.jpg" class="w-full h-full object-cover" alt="Mayank Bairagi" /> -->
         </div>
+
       </div>
     </section>
 
-    <section id="projects" class="border-b-6 border-border-dark bg-void-black">
-      <div class="p-6 border-b-2 border-border-dark font-mono text-xl uppercase flex justify-between bg-soviet-red text-white">
-        <span class="font-bold">// PROJECTS</span>
-        <span>[0{projects.length} UNITS]</span>
-      </div>
-      
-      {projects.length > 0 ? (
-        <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x-2 divide-border-dark border-b border-border-dark">
-          {projects.map((proj, idx) => {
-            const colors = [
-              "bg-[#111111] text-soviet-red",
-              "bg-[#111111] text-brutal-yellow",
-              "bg-[#111111] text-paper-cream",
-              "bg-[#111111] text-white"
-            ];
-            const bgClass = colors[idx % colors.length];
-            return (
-               <div class="flex flex-col justify-between group">
-                <div class={`h-100 p-8 flex flex-col justify-between border-b-2 border-border-dark ${bgClass}`}>
-                  <span class="font-mono text-sm uppercase tracking-widest opacity-80">_0{idx + 1}</span>
-                  <div>
-                    <h3 class="font-boldonse font-bold text-6xl mb-3  tracking-tight leading-none">{proj.data.title}</h3>
-                    <p class="font-mono text-base opacity-90 line-clamp-2">{proj.data.description || "Performance module specs."}</p>
-                  </div>
-                </div>
-                <div class="p-6 flex justify-between items-center bg-surface-dark">
-                  <span class="font-mono text-xs text-gray-500 uppercase tracking-wider">{proj.data.tags?.join(" / ") || "Systems"}</span>
-                  
-                  <div class="flex items-center gap-4">
-                    {proj.data.github ? (
-                      <a href={proj.data.github} target="_blank" rel="noopener noreferrer" class="font-mono font-bold text-xs text-gray-400  transition-colors link-raw"
-                        >
-                        GITHUB ↗
-                      </a>
-                    ) : (
-                    <span class="font-mono text-xs text-gray-600">No repo</span>
-                    )}
-                  </div>  
-                  <a href={`/projects/${proj.id}`} class="font-mono text-xs font-bold link-raw">
-                    INSPECT SYSTEM →
-                  </a>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      ) : (
-        <div class="p-16 text-center font-mono text-sm text-gray-500 bg-surface-dark">
-          No project matrices compiled. Define project records under src/content/projects/
-        </div>
-      )}
-    </section>
-
-    <section id="logbook" class="border-b-6 border-border-dark bg-void-black">
-      <div class="p-6 border-b-2 border-border-dark font-mono text-xl uppercase flex justify-between bg-brutal-yellow text-void-black">
-        <span class="font-bold">// Blogs</span>
-        <a href="/blog" class="font-bold underline hover:text-soviet-red">ARCHIVE ↗</a>
-      </div>
-
-      <div class="hidden md:grid grid-cols-12 p-4 border-b-2 border-border-dark font-mono text-xs text-gray-500 uppercase bg-surface-dark">
-        <div class="col-span-2">TIMESTAMP</div>
-        <div class="col-span-6">LOG IDENTIFIER</div>
-        <div class="col-span-3">CATEGORY</div>
-        <div class="col-span-1 text-right">ACCESS</div>
-      </div>
-
-      {posts.length > 0 ? (
-        posts.map((post) => (
-          <div class="grid grid-cols-12 p-6 border-b last:border-b-0 border-border-dark font-sans text-sm hover:bg-[#1A1A1A] transition-colors duration-150 items-center">
-            <div class="col-span-12 md:col-span-2 font-mono text-xs text-gray-500 mb-1 md:mb-0">
-              {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })}
-            </div>
-            <div class="col-span-12 md:col-span-6 font-bold text-lg mb-2 md:mb-0 text-white  tracking-tight">
-              {post.data.title}
-            </div>
-            <div class="col-span-6 md:col-span-3 text-gray-400 font-mono text-xs uppercase">
-              {post.data.tags?.join(" / ") || "General"}
-            </div>
-            <div class="col-span-6 md:col-span-1 text-right">
-              <a href={`/blog/${post.id}`} class="link-raw font-mono text-xs uppercase font-bold">
-                READ
-              </a>
-            </div>
-          </div>
-        ))
-      ) : (
-        <div class="p-16 text-center font-mono text-sm text-gray-500 bg-surface-dark">
-          No logs captured. Put markdown log sheets under src/content/blog/
-        </div>
-      )}
-    </section>
   </main>
 </BaseLayout>
