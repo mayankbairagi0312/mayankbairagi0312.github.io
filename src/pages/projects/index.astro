@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
-// Fetch projects and sort them safely
+
 const projects = (await getCollection('projects'))
   .sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
 ---

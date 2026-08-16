@@ -2,8 +2,13 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 <BaseLayout title="404 – Not Found">
-  <div class="text-center py-20">
-    <h1 class="text-6xl font-bold text-red">404</h1>
-    <p class="text-xl mt-4">Page not found. Back to <a href="/" class="text-yellow">home</a>.</p>
+  <div class="bg-void-black min-h-screen flex items-center justify-center text-center font-mono">
+    <div>
+      <h1 class="text-8xl font-bold text-soviet-red mb-4">404</h1>
+      <p class="text-paper-cream text-xl mb-8 uppercase tracking-widest">Page Not Found</p>
+      <a href="/" class="border-2 border-paper-cream text-paper-cream px-6 py-3 hover:bg-paper-cream hover:text-void-black transition-colors uppercase text-sm font-bold">
+        Return Home
+      </a>
+    </div>
   </div>
 </BaseLayout>
