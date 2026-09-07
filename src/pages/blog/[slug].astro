@@ -17,21 +17,19 @@ const { Content } = await render(entry);
   title={entry.data.title} 
   description={entry.data.description ?? "Mayank Bairagi "}
 >
-  <!-- Dark surface background ensuring maximum legibility -->
-  <main class="bg-void-black min-h-screen text-paper-cream relative">
-    <!-- Subtle retro layout stripes -->
+  <main class="bg-void-black min-h-screen text-paper-cream relative overflow-x-hidden">
     <div class="absolute inset-0 bg-stripes opacity-5 pointer-events-none"></div>
     
-    <div class="relative z-10 max-w-5xl mx-auto px-4 md:px-8 py-12 md:py-16 flex flex-col gap-8">
+    <div class="relative z-10 max-w-5xl mx-auto px-3 sm:px-6 md:px-8 py-8 md:py-16 flex flex-col gap-6 md:gap-8">
       
       <!-- Back Navigation Button -->
       <a href="/blog" class="font-mono text-xs uppercase text-paper-cream/60 hover:text-soviet-red underline underline-offset-4 self-start tracking-wider transition-colors font-bold">
         [ ← Return to Archive ]
       </a>
       
-      <!-- ARTICLE HEADER - minimal: thin border, no shadow -->
-      <header class="bg-surface-dark border-b border-border-dark/50 p-6 md:p-8">
-        <div class="flex flex-wrap items-center gap-3 font-mono text-xs text-paper-cream/50 mb-4">
+      <!-- ARTICLE HEADER -->
+      <header class="bg-surface-dark border-b border-border-dark/50 p-4 sm:p-6 md:p-8">
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3 font-mono text-xs text-paper-cream/50 mb-3">
           <time datetime={entry.data.date.toISOString()} class="bg-void-black text-paper-cream px-2 py-0.5 font-bold">
             {entry.data.date.toLocaleDateString('en-US', {
               year: 'numeric',
@@ -40,23 +38,23 @@ const { Content } = await render(entry);
             })}
           </time>
           <span>/</span>
-          <span>LOG_ID: {entry.id}</span>
+          <span class="truncate max-w-[150px] sm:max-w-none">LOG_ID: {entry.id}</span>
         </div>
 
-        <h1 class="font-mono font-bold text-3xl md:text-5xl tracking-tight text-paper-cream border-b border-border-dark/30 pb-4 mb-4">
+        <h1 class="font-mono font-bold text-2xl sm:text-3xl md:text-5xl tracking-tight text-paper-cream border-b border-border-dark/30 pb-4 mb-4 break-words">
           {entry.data.title}
         </h1>
 
         {entry.data.description && (
-          <p class="text-base text-paper-cream/70 font-mono border-l-2 border-soviet-red pl-4 mt-2">
+          <p class="text-sm sm:text-base text-paper-cream/70 font-mono border-l-2 border-soviet-red pl-3 sm:pl-4 mt-2">
             {entry.data.description}
           </p>
         )}
 
         {entry.data.tags && entry.data.tags.length > 0 && (
-          <div class="flex flex-wrap gap-2 mt-4">
+          <div class="flex flex-wrap gap-1.5 sm:gap-2 mt-4">
             {entry.data.tags.map((t: string) => (
-              <span class="font-mono text-xs bg-void-black text-paper-cream px-2.5 py-0.5 border border-border-dark font-bold uppercase">
+              <span class="font-mono text-[10px] sm:text-xs bg-void-black text-paper-cream px-2 py-0.5 border border-border-dark font-bold uppercase">
                 #{t}
               </span>
             ))}
@@ -64,39 +62,38 @@ const { Content } = await render(entry);
         )}
       </header>
 
-      <!-- MARKDOWN RENDER CONTAINER - minimal: no heavy border/shadow, just padding, wider prose -->
-      <article class="bg-surface-dark/60 p-6 md:p-10">
+      <!-- MARKDOWN RENDER CONTAINER -->
+      <article class="bg-surface-dark/60 p-4 sm:p-6 md:p-10 break-words">
         <div class="prose max-w-none 
-          prose-p:font-sans prose-p:text-paper-cream/85 prose-p:leading-relaxed prose-p:text-[17px] prose-p:mb-6
+          prose-p:font-sans prose-p:text-paper-cream/85 prose-p:leading-relaxed prose-p:text-[15px] sm:prose-p:text-[17px] prose-p:mb-6
           prose-headings:font-mono prose-headings:font-bold prose-headings:text-paper-cream prose-headings:tracking-tight prose-headings:mt-8 prose-headings:mb-4
-          prose-h2:text-2xl prose-h2:border-b prose-h2:border-border-dark/30 prose-h2:pb-2
-          prose-h3:text-xl
-          prose-a:text-soviet-red prose-a:font-bold prose-a:underline prose-a:hover:text-paper-cream
-          prose-code:text-brutal-yellow prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:text-sm prose-code:before:content-none prose-code:after:content-none
-          prose-pre:!bg-void-black prose-pre:text-paper-cream prose-pre:p-4 prose-pre:border prose-pre:border-border-dark/20 prose-pre:rounded-sm
-          prose-img:border prose-img:border-border-dark/20 prose-img:rounded-sm
+          prose-h2:text-xl sm:prose-h2:text-2xl prose-h2:border-b prose-h2:border-border-dark/30 prose-h2:pb-2
+          prose-h3:text-lg sm:prose-h3:text-xl
+          prose-a:text-soviet-red prose-a:font-bold prose-a:underline prose-a:hover:text-paper-cream prose-a:break-all
+          prose-code:text-brutal-yellow prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:text-xs sm:prose-code:text-sm prose-code:before:content-none prose-code:after:content-none prose-code:break-all
+          prose-pre:!bg-void-black prose-pre:text-paper-cream prose-pre:p-3 sm:prose-pre:p-4 prose-pre:border prose-pre:border-border-dark/20 prose-pre:rounded-sm prose-pre:overflow-x-auto
+          prose-img:border prose-img:border-border-dark/20 prose-img:rounded-sm prose-img:w-full prose-img:h-auto
           prose-strong:text-paper-cream prose-strong:font-bold
           prose-ul:list-disc prose-ul:pl-5 prose-ol:list-decimal prose-ol:pl-5
           prose-li:text-paper-cream/85 prose-li:font-sans prose-li:mb-2
           prose-blockquote:border-l-2 prose-blockquote:border-soviet-red prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-paper-cream/70
           prose-hr:border-border-dark/30
-          prose-table:w-full prose-table:border-collapse
-          prose-th:text-paper-cream prose-th:font-bold prose-th:text-left prose-th:border-b prose-th:border-border-dark/30 prose-th:py-3 prose-th:px-2 prose-th:bg-transparent
-          prose-td:text-paper-cream/85 prose-td:border-b prose-td:border-border-dark/20 prose-td:py-3 prose-td:px-2 prose-td:bg-transparent
+          prose-table:block prose-table:w-full prose-table:overflow-x-auto prose-table:border-collapse
+          prose-th:text-paper-cream prose-th:font-bold prose-th:text-left prose-th:border-b prose-th:border-border-dark/30 prose-th:py-2 prose-th:px-2 prose-th:bg-transparent
+          prose-td:text-paper-cream/85 prose-td:border-b prose-td:border-border-dark/20 prose-td:py-2 prose-td:px-2 prose-td:bg-transparent
           prose-thead:border-b prose-thead:border-border-dark/50">
           <Content />
         </div>
       </article>
 
       <!-- Back Navigation Bottom -->
-      <a href="/blog" class="font-mono text-xs uppercase text-paper-cream/60 hover:text-soviet-red underline underline-offset-4 self-center tracking-wider transition-colors font-bold mt-4">
+      <a href="/blog" class="font-mono text-xs uppercase text-paper-cream/60 hover:text-soviet-red underline underline-offset-4 self-center tracking-wider transition-colors font-bold mt-2">
         [ ← Return to Archive ]
       </a>
 
     </div>
   </main>
 
-  <!-- Mermaid - global CDN, most reliable with Astro. Same theme, no npm install -->
   <script is:inline src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <script is:inline>
     (function() {
@@ -122,7 +119,6 @@ const { Content } = await render(entry);
 
       async function renderMermaid() {
         var pres = document.querySelectorAll('pre');
-        console.log('[mermaid] scanning', pres.length, 'pre blocks');
         var count = 0;
         for (var i = 0; i < pres.length; i++) {
           var pre = pres[i];
@@ -131,33 +127,24 @@ const { Content } = await render(entry);
           var source = code ? (code.textContent || '') : (pre.textContent || '');
           var isMermaid = false;
 
-          // 1) explicit markers
           if (code && (code.classList.contains('language-mermaid') || code.classList.contains('mermaid'))) isMermaid = true;
           if (pre.classList.contains('language-mermaid')) isMermaid = true;
           if (pre.getAttribute('data-language') === 'mermaid') isMermaid = true;
           if (code && code.getAttribute('data-language') === 'mermaid') isMermaid = true;
-          // 2) content heuristic - catches Shiki-highlighted mermaid where class was stripped
-          if (!isMermaid && MERMAID_RE.test(source)) {
-            // extra guard: don't match normal code that happens to start with "graph"
-            // mermaid blocks are usually short, so check length < 5000 and contains -->
-            isMermaid = true;
-            console.log('[mermaid] heuristic matched pre #' + i + ':', source.slice(0, 60));
-          }
+          if (!isMermaid && MERMAID_RE.test(source)) isMermaid = true;
 
           if (!isMermaid) continue;
 
           var div = document.createElement('div');
-          div.className = 'mermaid not-prose my-8 flex justify-center overflow-x-auto bg-transparent p-0 border-0';
+          div.className = 'mermaid not-prose my-8 flex justify-center overflow-x-auto max-w-full bg-transparent p-0 border-0';
           div.textContent = source.trim();
           div.dataset.mermaidDone = "true";
           pre.replaceWith(div);
           count++;
         }
-        console.log('[mermaid] converted', count, 'blocks');
         if (count > 0) {
           try {
             await window.mermaid.run({ querySelector: '.mermaid' });
-            console.log('[mermaid] rendered');
           } catch(e) { console.error('[mermaid] run error', e); }
         }
       }
@@ -168,15 +155,13 @@ const { Content } = await render(entry);
       if (document.readyState !== 'loading') renderMermaid();
       setTimeout(renderMermaid, 400);
       setTimeout(renderMermaid, 1200);
-      // also observe DOM for client navigation
       new MutationObserver(function(){ renderMermaid(); }).observe(document.body, { childList: true, subtree: true });
     })();
   </script>
 
   <style is:global>
     .mermaid { background: transparent !important; }
-    .mermaid svg { max-width: 100%; height: auto; display: block; background: transparent !important; }
-    /* prevent Shiki from showing mermaid as code flash */
+    .mermaid svg { max-width: 100% !important; height: auto !important; display: block; background: transparent !important; }
     pre[data-language="mermaid"] { border-color: #D9281C !important; }
   </style>
 </BaseLayout>
