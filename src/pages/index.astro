@@ -17,12 +17,12 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 <section class="border-b-4 border-border-dark bg-surface-dark">
   <div class="px-12 py-18 md:px-20 md:py-24 text-center">
 
-    <p class="font-mono font-bold text-4xl md:text-4xl text-paper-cream mb-2">
+    <p class="font-mono font-bold text-2xl md:text-4xl text-paper-cream mb-2">
       Hi there.   
     </p>
     <div class="h-1 w-35 bg-brutal-yellow mx-auto mb-9"></div>
 
-    <p class="font-mono text-2xl md:text-3xl text-paper-cream leading-snug max-w-3xl mx-auto font-normal">
+    <p class="font-mono text-xl md:text-3xl text-paper-cream leading-snug max-w-3xl mx-auto font-normal">
       I'm Mayank. I like making things with code, graphics, and low-level systems.
     </p>
   </div>
@@ -30,9 +30,9 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
     <!-- LATEST LOGS -->
     <section id="logbook" class="border-b-4 border-border-dark bg-surface-dark/20">
-      <div class="p-6 border-b-2 border-border-dark font-mono text-xl uppercase bg-surface-dark text-white relative text-center">
+      <div class="p-6 border-b-2 border-border-dark font-mono text-base md:text-xl uppercase bg-surface-dark text-white relative text-center">
         <span class="font-bold">Latest Logs</span>
-        <a href="/blog" class="absolute right-6 top-1/2 -translate-y-1/2 text-sm font-bold underline hover:text-soviet-red">ARCHIVE ↗</a>
+        <a href="/blog" class="absolute right-6 top-1/2 -translate-y-1/2 text-xs md:text-sm font-bold underline hover:text-soviet-red">ARCHIVE ↗</a>
       </div>
 
       <div class="p-8 md:p-12 max-w-7xl mx-auto">
@@ -54,7 +54,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
                   )}
                 </div>
                 
-                <h3 class="font-bold text-lg text-paper-cream group-hover:text-soviet-red transition-colors mb-3 leading-snug line-clamp-2">
+                <h3 class="font-bold text-base md:text-lg text-paper-cream group-hover:text-soviet-red transition-colors mb-3 leading-snug line-clamp-2">
                   {post.data.title}
                 </h3>
                 
@@ -75,9 +75,9 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
     <!-- PROJECTS -->
     <section id="projects" class="border-b-4 border-border-dark bg-void-black">
-      <div class="p-6 border-b-2 border-border-dark font-mono text-xl uppercase bg-surface-dark text-white relative text-center">
+      <div class="p-6 border-b-2 border-border-dark font-mono text-base md:text-xl uppercase bg-surface-dark text-white relative text-center">
         <span class="font-bold">PROJECTS</span>
-        <span class="absolute right-6 top-1/2 -translate-y-1/2 text-sm">[0{projects.length} UNITS]</span>
+        <span class="absolute right-6 top-1/2 -translate-y-1/2 text-xs md:text-sm">[0{projects.length} UNITS]</span>
       </div>
       
       {projects.length > 0 ? (
@@ -94,7 +94,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
                 <div class={`h-72 p-7 md:p-8 flex flex-col justify-between border-b-2 border-border-dark ${bgClass} group-hover:bg-void-black transition-colors duration-200`}>
                   <span class="font-mono text-xs uppercase tracking-widest opacity-80">_0{idx + 1}</span>
                   <div class="mb-6">
-                    <h3 class="font-boldonse font-bold text-xl md:text-2xl mb-2 tracking-tight leading-snug">{proj.data.title}</h3>
+                    <h3 class="font-mono font-bold text-lg md:text-2xl mb-2 tracking-tight leading-snug">{proj.data.title}</h3>
                     <p class="font-mono text-sm opacity-90 ">{proj.data.description || "Performance module specs."}</p>
                   </div>
                 </div>
@@ -129,11 +129,10 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
         </div>
       )}
     </section>
-
 <!-- ABOUT ME -->
 <section id="about" class="border-b border-border-dark bg-surface-dark">
   <!-- Optional Section Header (Kept minimal) -->
-  <div class="py-4 border-b-2 border-border-dark font-mono font-bold text-sm uppercase text-paper-cream text-center tracking-widest">
+  <div class="py-4 border-b-2 border-border-dark font-mono font-bold text-base md:text-xl uppercase text-paper-cream text-center tracking-widest">
     About Me
   </div>
 
