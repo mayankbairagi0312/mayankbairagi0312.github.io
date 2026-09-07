@@ -8,10 +8,10 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 ---
 <BaseLayout title="Engineering Logbook">
   <main class="flex-grow bg-void-black flex flex-col min-h-screen">
-    
+   
     <!-- HEADER INTRO SECTION (Simplified & Clean) -->
     <div class="p-8 md:p-12 lg:p-16 border-b-4 border-border-dark bg-surface-dark text-paper-cream relative">
-      <div class="max-w-4xl">
+      <div class="max-w-5xl">
         <span class="font-mono text-xs uppercase tracking-widest mb-4 inline-block px-3 py-1 bg-void-black text-paper-cream font-bold">
           // SYS.LOG.ARCHIVE
         </span>
@@ -25,7 +25,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     </div>
 
     <!-- POSTS GRID / LIST -->
-    <div class="flex-grow max-w-4xl w-full mx-auto px-4 md:px-8 py-12">
+    <div class="flex-grow max-w-5xl w-full mx-auto px-4 md:px-8 py-12">
       {posts.length > 0 ? (
         <div class="flex flex-col gap-8">
           {posts.map((post) => (

@@ -19,19 +19,18 @@ const { Content } = await render(entry);
 >
   <!-- Dark surface background ensuring maximum legibility -->
   <main class="bg-void-black min-h-screen text-paper-cream relative">
-    
     <!-- Subtle retro layout stripes -->
     <div class="absolute inset-0 bg-stripes opacity-5 pointer-events-none"></div>
     
-    <div class="relative z-10 max-w-3xl mx-auto px-4 md:px-8 py-12 md:py-16 flex flex-col gap-8">
+    <div class="relative z-10 max-w-5xl mx-auto px-4 md:px-8 py-12 md:py-16 flex flex-col gap-8">
       
       <!-- Back Navigation Button -->
       <a href="/blog" class="font-mono text-xs uppercase text-paper-cream/60 hover:text-soviet-red underline underline-offset-4 self-start tracking-wider transition-colors font-bold">
         [ ← Return to Archive ]
       </a>
       
-      <!-- ARTICLE HEADER -->
-      <header class="bg-surface-dark border-4 border-border-dark p-6 md:p-8 shadow-[8px_8px_0px_#2A2A2A]">
+      <!-- ARTICLE HEADER - minimal: thin border, no shadow -->
+      <header class="bg-surface-dark border-b border-border-dark/50 p-6 md:p-8">
         <div class="flex flex-wrap items-center gap-3 font-mono text-xs text-paper-cream/50 mb-4">
           <time datetime={entry.data.date.toISOString()} class="bg-void-black text-paper-cream px-2 py-0.5 font-bold">
             {entry.data.date.toLocaleDateString('en-US', {
@@ -44,12 +43,12 @@ const { Content } = await render(entry);
           <span>LOG_ID: {entry.id}</span>
         </div>
 
-        <h1 class="font-mono font-bold text-3xl md:text-5xl uppercase tracking-tight text-paper-cream border-b-4 border-soviet-red pb-4 mb-4">
+        <h1 class="font-mono font-bold text-3xl md:text-5xl tracking-tight text-paper-cream border-b border-border-dark/30 pb-4 mb-4">
           {entry.data.title}
         </h1>
 
         {entry.data.description && (
-          <p class="text-base text-paper-cream/70 font-mono border-l-4 border-soviet-red pl-4 mt-2">
+          <p class="text-base text-paper-cream/70 font-mono border-l-2 border-soviet-red pl-4 mt-2">
             {entry.data.description}
           </p>
         )}
@@ -65,22 +64,26 @@ const { Content } = await render(entry);
         )}
       </header>
 
-      <!-- MARKDOWN RENDER CONTAINER-->
-      <article class="bg-surface-dark border-4 border-border-dark p-6 md:p-10 shadow-[8px_8px_0px_#2A2A2A]">
+      <!-- MARKDOWN RENDER CONTAINER - minimal: no heavy border/shadow, just padding, wider prose -->
+      <article class="bg-surface-dark/60 p-6 md:p-10">
         <div class="prose max-w-none 
-          prose-p:font-sans prose-p:text-paper-cream/85 prose-p:leading-relaxed prose-p:text-base prose-p:mb-6
+          prose-p:font-sans prose-p:text-paper-cream/85 prose-p:leading-relaxed prose-p:text-[17px] prose-p:mb-6
           prose-headings:font-mono prose-headings:font-bold prose-headings:text-paper-cream prose-headings:tracking-tight prose-headings:mt-8 prose-headings:mb-4
-          prose-h2:text-2xl prose-h2:border-b-2 prose-h2:border-border-dark prose-h2:pb-2
+          prose-h2:text-2xl prose-h2:border-b prose-h2:border-border-dark/30 prose-h2:pb-2
           prose-h3:text-xl
-          prose-a:text-soviet-red prose-a:font-bold prose-a:underline  prose-a:hover:text-paper-cream
+          prose-a:text-soviet-red prose-a:font-bold prose-a:underline prose-a:hover:text-paper-cream
           prose-code:text-brutal-yellow prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:text-sm prose-code:before:content-none prose-code:after:content-none
-          prose-pre:!bg-void-black prose-pre:text-paper-cream prose-pre:p-4 prose-pre:border-2 prose-pre:border-void-black prose-pre:shadow-[4px_4px_0px_#FFFFFF]
-          prose-img:border-4 prose-img:border-border-dark
+          prose-pre:!bg-void-black prose-pre:text-paper-cream prose-pre:p-4 prose-pre:border prose-pre:border-border-dark/20 prose-pre:rounded-sm
+          prose-img:border prose-img:border-border-dark/20 prose-img:rounded-sm
           prose-strong:text-paper-cream prose-strong:font-bold
           prose-ul:list-disc prose-ul:pl-5 prose-ol:list-decimal prose-ol:pl-5
           prose-li:text-paper-cream/85 prose-li:font-sans prose-li:mb-2
-          prose-blockquote:border-l-4 prose-blockquote:border-soviet-red prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-paper-cream/70
-          prose-hr:border-border-dark">
+          prose-blockquote:border-l-2 prose-blockquote:border-soviet-red prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-paper-cream/70
+          prose-hr:border-border-dark/30
+          prose-table:w-full prose-table:border-collapse
+          prose-th:text-paper-cream prose-th:font-bold prose-th:text-left prose-th:border-b prose-th:border-border-dark/30 prose-th:py-3 prose-th:px-2 prose-th:bg-transparent
+          prose-td:text-paper-cream/85 prose-td:border-b prose-td:border-border-dark/20 prose-td:py-3 prose-td:px-2 prose-td:bg-transparent
+          prose-thead:border-b prose-thead:border-border-dark/50">
           <Content />
         </div>
       </article>
@@ -92,4 +95,88 @@ const { Content } = await render(entry);
 
     </div>
   </main>
+
+  <!-- Mermaid - global CDN, most reliable with Astro. Same theme, no npm install -->
+  <script is:inline src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script is:inline>
+    (function() {
+      if (!window.mermaid) { console.error('[mermaid] CDN not loaded'); return; }
+      window.mermaid.initialize({
+        startOnLoad: false,
+        theme: 'dark',
+        themeVariables: {
+          background: 'transparent',
+          primaryColor: '#D9281C',
+          primaryTextColor: '#fff',
+          lineColor: '#D9281C',
+          secondaryColor: '#2A2A2A',
+          tertiaryColor: 'transparent',
+          textColor: '#E8E0D0',
+          mainBkg: '#2A2A2A',
+          nodeBorder: '#D9281C',
+          clusterBkg: 'transparent',
+        }
+      });
+
+      var MERMAID_RE = /^\s*(graph|flowchart|sequenceDiagram|classDiagram|stateDiagram|erDiagram|gantt|pie|journey|gitGraph|mindmap|timeline|quadrantChart|sankey)/m;
+
+      async function renderMermaid() {
+        var pres = document.querySelectorAll('pre');
+        console.log('[mermaid] scanning', pres.length, 'pre blocks');
+        var count = 0;
+        for (var i = 0; i < pres.length; i++) {
+          var pre = pres[i];
+          if (pre.classList.contains('mermaid') || pre.dataset.mermaidDone) continue;
+          var code = pre.querySelector('code');
+          var source = code ? (code.textContent || '') : (pre.textContent || '');
+          var isMermaid = false;
+
+          // 1) explicit markers
+          if (code && (code.classList.contains('language-mermaid') || code.classList.contains('mermaid'))) isMermaid = true;
+          if (pre.classList.contains('language-mermaid')) isMermaid = true;
+          if (pre.getAttribute('data-language') === 'mermaid') isMermaid = true;
+          if (code && code.getAttribute('data-language') === 'mermaid') isMermaid = true;
+          // 2) content heuristic - catches Shiki-highlighted mermaid where class was stripped
+          if (!isMermaid && MERMAID_RE.test(source)) {
+            // extra guard: don't match normal code that happens to start with "graph"
+            // mermaid blocks are usually short, so check length < 5000 and contains -->
+            isMermaid = true;
+            console.log('[mermaid] heuristic matched pre #' + i + ':', source.slice(0, 60));
+          }
+
+          if (!isMermaid) continue;
+
+          var div = document.createElement('div');
+          div.className = 'mermaid not-prose my-8 flex justify-center overflow-x-auto bg-transparent p-0 border-0';
+          div.textContent = source.trim();
+          div.dataset.mermaidDone = "true";
+          pre.replaceWith(div);
+          count++;
+        }
+        console.log('[mermaid] converted', count, 'blocks');
+        if (count > 0) {
+          try {
+            await window.mermaid.run({ querySelector: '.mermaid' });
+            console.log('[mermaid] rendered');
+          } catch(e) { console.error('[mermaid] run error', e); }
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', renderMermaid);
+      document.addEventListener('astro:page-load', renderMermaid);
+      document.addEventListener('astro:after-swap', renderMermaid);
+      if (document.readyState !== 'loading') renderMermaid();
+      setTimeout(renderMermaid, 400);
+      setTimeout(renderMermaid, 1200);
+      // also observe DOM for client navigation
+      new MutationObserver(function(){ renderMermaid(); }).observe(document.body, { childList: true, subtree: true });
+    })();
+  </script>
+
+  <style is:global>
+    .mermaid { background: transparent !important; }
+    .mermaid svg { max-width: 100%; height: auto; display: block; background: transparent !important; }
+    /* prevent Shiki from showing mermaid as code flash */
+    pre[data-language="mermaid"] { border-color: #D9281C !important; }
+  </style>
 </BaseLayout>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BVH Structure</title>
+</head>
+<body>
+
+<!-- BVH — interactive bounding-volume-hierarchy component.
+     4 primitives, 7 nodes: ROOT · 2 internal · 4 leaves.
+     Drop this whole <div id="bvh">…</div> block into any markdown file that allows inline HTML. -->
+<div id="bvh">
+  <style>
+    #bvh{
+      --bg:#0a0a0a;
+      --panel:#101010;
+      --panel-hi:#161616;
+      --border:#262626;
+      --line:#333333;
+      --txt:#e8e8e8;
+      --dim:#808080;
+      --faint:#565656;
+      --c-p0:#6e9eff;   /* circle  — blue   */
+      --c-p1:#e8b45a;   /* box     — amber  */
+      --c-p2:#58c4a0;   /* hexagon — green  */
+      --c-p3:#d97a8c;   /* triangle— rose   */
+      --c-int:#b48ead;  /* internal AABB — lavender */
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+      max-width:940px;margin:2.5rem auto;padding:24px 26px 16px;
+      background:var(--bg);
+      border:1px solid var(--border);
+      border-radius:12px;
+      color:var(--txt);
+    }
+    #bvh .head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px}
+    #bvh .head h3{margin:0;font-size:13.5px;font-weight:600;letter-spacing:.3px}
+    #bvh .head span{font-size:9.5px;color:var(--faint);letter-spacing:1.2px;text-transform:uppercase}
+
+    #bvh .collabel{font-size:9px;letter-spacing:1.1px;text-transform:uppercase;fill:var(--faint)}
+    #bvh .lg{font-size:9px;fill:var(--dim)}
+
+    /* scene */
+    #bvh .obj{stroke:rgba(0,0,0,.35);stroke-width:1;transition:opacity .12s ease}
+    #bvh .bb{fill:none;transition:all .12s ease;pointer-events:none}
+    #bvh .bb.leaf{stroke-dasharray:4 3;stroke-width:1.1}
+    #bvh .bb.int{stroke:var(--c-int);stroke-dasharray:6 4;stroke-width:1.2}
+    #bvh .bb.root{stroke:var(--txt);stroke-width:1.5}
+    #bvh .bb.dim{opacity:.12}
+
+    /* tree */
+    #bvh .node{cursor:pointer;outline:none}
+    #bvh .node rect{fill:var(--panel);stroke:var(--border);stroke-width:1;transition:all .12s ease}
+    #bvh .node:hover rect{fill:var(--panel-hi)}
+    #bvh .node.root rect{stroke:var(--txt);stroke-width:1.5}
+    #bvh .node.internal rect{stroke:var(--c-int);stroke-width:1.2}
+    #bvh .node.p0 rect{stroke:var(--c-p0)} #bvh .node.p1 rect{stroke:var(--c-p1)}
+    #bvh .node.p2 rect{stroke:var(--c-p2)} #bvh .node.p3 rect{stroke:var(--c-p3)}
+    #bvh .node.on rect{fill:rgba(255,255,255,.06);stroke-width:2}
+    #bvh .node text{fill:var(--txt);font-size:11.5px;font-weight:600;pointer-events:none}
+    #bvh .node .k{fill:var(--faint);font-size:8px;font-weight:400;letter-spacing:.8px;text-transform:uppercase}
+    #bvh .node.p0 .k{fill:var(--c-p0)} #bvh .node.p1 .k{fill:var(--c-p1)}
+    #bvh .node.p2 .k{fill:var(--c-p2)} #bvh .node.p3 .k{fill:var(--c-p3)}
+    #bvh .node.internal .k{fill:var(--c-int)}
+    #bvh .edge{stroke:var(--line);stroke-width:1.1;fill:none;transition:stroke .12s ease}
+    #bvh .edge.on{stroke:#707070}
+
+    /* info strip */
+    #bvh .info{
+      border-top:1px solid var(--border);
+      margin-top:14px;padding-top:12px;
+      font-size:12px;line-height:1.6;color:#9a9a9a;min-height:56px;
+    }
+    #bvh .info b{color:var(--txt);font-weight:600}
+    #bvh .info .keys{color:var(--dim)}
+    #bvh .cap{font-size:9px;color:var(--faint);text-align:right;margin-top:8px;letter-spacing:.6px}
+  </style>
+
+  <div class="head">
+    <h3>Bounding Volume Hierarchy</h3>
+    <span>4 primitives · 7 nodes</span>
+  </div>
+
+  <svg viewBox="0 0 880 322" width="100%" role="img" aria-label="BVH scene and tree">
+    <text x="44" y="18" class="collabel">scene</text>
+    <text x="452" y="18" class="collabel">tree</text>
+
+    <!-- ======= SCENE: primitives ======= -->
+    <circle class="obj" cx="105" cy="125" r="38" fill="var(--c-p0)"/>
+    <rect class="obj" x="175" y="183" width="74" height="74" fill="var(--c-p1)"/>
+    <polygon class="obj" points="365,105 345,139.6 305,139.6 285,105 305,70.4 345,70.4" fill="var(--c-p2)"/>
+    <polygon class="obj" points="300,270 376,270 338,206" fill="var(--c-p3)"/>
+
+    <!-- leaf AABBs (dashed, object color) -->
+    <rect id="bb-P0" class="bb leaf" x="61"  y="81"  width="88" height="88" stroke="var(--c-p0)"/>
+    <rect id="bb-P1" class="bb leaf" x="169" y="177" width="86" height="86" stroke="var(--c-p1)"/>
+    <rect id="bb-P2" class="bb leaf" x="281" y="64"  width="88" height="82" stroke="var(--c-p2)"/>
+    <rect id="bb-P3" class="bb leaf" x="294" y="200" width="88" height="76" stroke="var(--c-p3)"/>
+
+    <!-- internal AABBs (lavender) -->
+    <rect id="bb-N0" class="bb int" x="53"  y="73" width="210" height="198"/>
+    <rect id="bb-N1" class="bb int" x="273" y="56" width="117" height="228"/>
+
+    <!-- root AABB (white, solid) -->
+    <rect id="bb-ROOT" class="bb root" x="44" y="46" width="354" height="248"/>
+
+    <!-- legend -->
+    <g class="lg">
+      <line x1="44" y1="312" x2="66" y2="312" stroke="#e8e8e8" stroke-width="1.5"/>
+      <text x="72" y="315">root</text>
+      <line x1="108" y1="312" x2="130" y2="312" stroke="#b48ead" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <text x="136" y="315">internal</text>
+      <line x1="188" y1="312" x2="210" y2="312" stroke="#808080" stroke-width="1.1" stroke-dasharray="3 3"/>
+      <text x="216" y="315">leaf · per primitive</text>
+    </g>
+
+    <!-- ======= TREE ======= -->
+    <path id="e-ROOT-N0" class="edge" d="M 620 78 C 620 100, 532 100, 532 122"/>
+    <path id="e-ROOT-N1" class="edge" d="M 620 78 C 620 100, 708 100, 708 122"/>
+    <path id="e-N0-P0" class="edge" d="M 532 166 C 532 188, 490 188, 490 210"/>
+    <path id="e-N0-P1" class="edge" d="M 532 166 C 532 188, 578 188, 578 210"/>
+    <path id="e-N1-P2" class="edge" d="M 708 166 C 708 188, 666 188, 666 210"/>
+    <path id="e-N1-P3" class="edge" d="M 708 166 C 708 188, 754 188, 754 210"/>
+
+    <g class="node root" data-n="ROOT" tabindex="0">
+      <rect x="580" y="36" width="80" height="42" rx="6"/>
+      <text x="620" y="54" text-anchor="middle">ROOT</text>
+      <text class="k" x="620" y="69" text-anchor="middle">root</text>
+    </g>
+    <g class="node internal" data-n="N0" tabindex="0">
+      <rect x="492" y="124" width="80" height="42" rx="6"/>
+      <text x="532" y="142" text-anchor="middle">N0</text>
+      <text class="k" x="532" y="157" text-anchor="middle">internal</text>
+    </g>
+    <g class="node internal" data-n="N1" tabindex="0">
+      <rect x="668" y="124" width="80" height="42" rx="6"/>
+      <text x="708" y="142" text-anchor="middle">N1</text>
+      <text class="k" x="708" y="157" text-anchor="middle">internal</text>
+    </g>
+    <g class="node leaf p0" data-n="P0" tabindex="0">
+      <rect x="452" y="212" width="76" height="42" rx="6"/>
+      <text x="490" y="230" text-anchor="middle">P0</text>
+      <text class="k" x="490" y="245" text-anchor="middle">leaf · circle</text>
+    </g>
+    <g class="node leaf p1" data-n="P1" tabindex="0">
+      <rect x="540" y="212" width="76" height="42" rx="6"/>
+      <text x="578" y="230" text-anchor="middle">P1</text>
+      <text class="k" x="578" y="245" text-anchor="middle">leaf · box</text>
+    </g>
+    <g class="node leaf p2" data-n="P2" tabindex="0">
+      <rect x="628" y="212" width="76" height="42" rx="6"/>
+      <text x="666" y="230" text-anchor="middle">P2</text>
+      <text class="k" x="666" y="245" text-anchor="middle">leaf · hexagon</text>
+    </g>
+    <g class="node leaf p3" data-n="P3" tabindex="0">
+      <rect x="716" y="212" width="76" height="42" rx="6"/>
+      <text x="754" y="230" text-anchor="middle">P3</text>
+      <text class="k" x="754" y="245" text-anchor="middle">leaf · tri</text>
+    </g>
+  </svg>
+
+  <div class="info" id="bvh-info"></div>
+  <div class="cap">hover a tree node — its volume lights up in the scene</div>
+
+  <script>
+  (function(){
+    var T={
+      ROOT:{l:"ROOT",d:"One AABB around the whole scene. Every query starts here — if it misses ROOT, nothing below is touched. If it hits, both children must be tested.",
+        k:"1 box test gates the entire tree",bx:["ROOT","N0","N1","P0","P1","P2","P3"],edges:["e-ROOT-N0","e-ROOT-N1","e-N0-P0","e-N0-P1","e-N1-P2","e-N1-P3"]},
+      N0:{l:"N0",d:"Internal node grouping the spatially-close circle and box. Holds no geometry — only an AABB that fully contains its two children. A query that misses this box prunes both leaves in a single test.",
+        k:"internal · union of P0 ∪ P1",bx:["N0","P0","P1"],edges:["e-ROOT-N0","e-N0-P0","e-N0-P1"]},
+      N1:{l:"N1",d:"Internal node for the hexagon–triangle cluster. Note its height: the pair stacks vertically, so the AABB is tall. Split heuristics (e.g. SAH) exist to minimize exactly this kind of wasted volume.",
+        k:"internal · union of P2 ∪ P3",bx:["N1","P2","P3"],edges:["e-ROOT-N1","e-N1-P2","e-N1-P3"]},
+      P0:{l:"P0 · circle",d:"Leaf node: wraps the circle in a tight AABB. When a query reaches a leaf, the object is handed to the narrowphase for the exact test — the tree's job is done.",
+        k:"leaf · exact test from here",bx:["P0"],edges:["e-ROOT-N0","e-N0-P0"]},
+      P1:{l:"P1 · box",d:"Leaf node. An AABB around an axis-aligned box is exact — zero wasted area, so P1 is the cheapest possible leaf to query.",
+        k:"leaf · perfect fit",bx:["P1"],edges:["e-ROOT-N0","e-N0-P1"]},
+      P2:{l:"P2 · hexagon",d:"Leaf node. The hexagon fills only ~83% of its AABB — the dead space costs occasional visits from queries that miss the shape itself. Rotated shapes pay more.",
+        k:"leaf · partial fill of AABB",bx:["P2"],edges:["e-ROOT-N1","e-N1-P2"]},
+      P3:{l:"P3 · triangle",d:"Leaf node. Same story as the hexagon: the bounding box is cheap to test but conservative. That trade — cheap test, some slop — is the entire BVH bet.",
+        k:"leaf · conservative AABB",bx:["P3"],edges:["e-ROOT-N1","e-N1-P3"]}
+    };
+    var root=document.getElementById('bvh'),box=document.getElementById('bvh-info');
+    function show(k){
+      var i=T[k];
+      box.innerHTML='<b>'+i.l+'</b> — '+i.d+'<div class="keys">'+i.k+'</div>';
+      root.querySelectorAll('.node').forEach(function(n){n.classList.remove('on')});
+      root.querySelectorAll('.bb').forEach(function(b){b.classList.remove('on');b.classList.add('dim')});
+      root.querySelectorAll('.edge').forEach(function(e){e.classList.remove('on')});
+      var n=root.querySelector('[data-n="'+k+'"]'); if(n)n.classList.add('on');
+      i.bx.forEach(function(id){var b=document.getElementById('bb-'+id); if(b)b.classList.remove('dim');});
+      i.edges.forEach(function(id){var e=document.getElementById(id); if(e)e.classList.add('on');});
+    }
+    function clearAll(){
+      box.innerHTML='<b>BVH</b> — a tree of nested bounding volumes. Leaves wrap primitives, internal nodes wrap their children, and the root wraps everything: 4 primitives → 7 nodes. A query descends only into boxes it overlaps, so one cheap AABB test can prune whole subtrees. That is how broad-phase collision stays near O(log n) per query.';
+      root.querySelectorAll('.node').forEach(function(n){n.classList.remove('on')});
+      root.querySelectorAll('.edge').forEach(function(e){e.classList.remove('on')});
+      root.querySelectorAll('.bb').forEach(function(b){b.classList.remove('dim')});
+    }
+    root.querySelectorAll('.node').forEach(function(n){
+      n.addEventListener('mouseenter',function(){show(n.dataset.n)});
+      n.addEventListener('click',function(){show(n.dataset.n)});
+      n.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();show(n.dataset.n)}});
+    });
+    root.querySelector('svg').addEventListener('mouseleave',clearAll);
+    clearAll();
+  })();
+  </script>
+</div>
+
+</body>
+</html>

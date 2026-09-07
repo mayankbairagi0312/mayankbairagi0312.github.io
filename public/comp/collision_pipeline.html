@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Collision Detection Pipeline</title>
+</head>
+<body>
+
+<!-- Collision Detection Pipeline — interactive overview component.
+     Drop this whole <div id="cdp">…</div> block into any markdown file that allows inline HTML. -->
+<div id="cdp">
+  <style>
+    #cdp{
+      --bg:#0a0a0a;
+      --panel:#101010;
+      --panel-hi:#161616;
+      --border:#262626;
+      --line:#3a3a3a;
+      --txt:#e8e8e8;
+      --dim:#808080;
+      --faint:#5a5a5a;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+      max-width:760px;margin:2.5rem auto;padding:26px 26px 18px;
+      background:var(--bg);
+      border:1px solid var(--border);
+      border-radius:12px;
+      color:var(--txt);
+    }
+    #cdp .head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px}
+    #cdp .head h3{margin:0;font-size:13.5px;font-weight:600;letter-spacing:.3px}
+    #cdp .head span{font-size:9.5px;color:var(--faint);letter-spacing:1.2px;text-transform:uppercase}
+
+    #cdp .stage{cursor:pointer;transition:all .15s ease;outline:none}
+    #cdp .stage rect{fill:var(--panel);stroke:var(--border);stroke-width:1;transition:all .15s ease}
+    #cdp .stage:hover rect{fill:var(--panel-hi);stroke:#4a4a4a}
+    #cdp .stage.active rect{stroke:var(--txt);stroke-width:1.5;fill:rgba(255,255,255,.045)}
+    #cdp .stage text{fill:var(--txt);font-size:12.5px;font-weight:600;pointer-events:none}
+    #cdp .stage .sub{fill:var(--dim);font-size:10px;font-weight:400}
+    #cdp .stage .num{fill:var(--faint);font-size:9.5px;font-weight:700;letter-spacing:1px}
+    #cdp .stage.active .num{fill:var(--dim)}
+
+    /* connectors: thin orthogonal Bus lines, single small arrowheads only where direction matters */
+    #cdp .flow{stroke:var(--line);stroke-width:1.2;fill:none}
+    #cdp .arr{fill:var(--dim);stroke:none}
+    #cdp .loopback{stroke:#4a4a4a;stroke-dasharray:3 4}
+    #cdp .syslabel{fill:var(--faint);font-size:9px;letter-spacing:1.1px;text-transform:uppercase}
+    #cdp .lloop{fill:var(--faint);font-size:9.5px;letter-spacing:.4px}
+
+    /* compact info block */
+    #cdp .info{
+      border-top:1px solid var(--border);
+      margin-top:16px;padding-top:14px;
+      font-size:12px;line-height:1.65;color:#9a9a9a;
+      min-height:64px;
+    }
+    #cdp .info .it{display:grid;grid-template-columns:118px 1fr;gap:6px 14px;align-items:baseline}
+    #cdp .info .it b{
+      color:var(--txt);font-weight:600;font-size:12px;
+      border-right:1px solid var(--border);padding-bottom:8px;
+    }
+    #cdp .info .it p{margin:0;padding-bottom:8px}
+    #cdp .info .keys{padding-bottom:0;color:var(--dim)}
+    #cdp .info .keys i{font-style:normal;color:var(--faint)}
+    #cdp .cap{font-size:9px;color:var(--faint);text-align:right;margin-top:10px;letter-spacing:.6px}
+  </style>
+
+  <div class="head">
+    <h3>Collision Detection Pipeline</h3>
+    <span>architecture overview</span>
+  </div>
+
+  <svg viewBox="0 0 720 268" width="100%" role="img" aria-label="Collision detection pipeline diagram">
+    <!-- main pipeline -->
+    <g class="stage active" data-k="broad" tabindex="0">
+      <rect x="10" y="42" width="205" height="74" rx="6"/>
+      <text class="num" x="26" y="64">01</text>
+      <text x="112" y="78" text-anchor="middle">Broad Phase</text>
+      <text x="112" y="97" text-anchor="middle" class="sub">cull impossible pairs</text>
+    </g>
+    <g class="stage" data-k="narrow" tabindex="0">
+      <rect x="258" y="42" width="205" height="74" rx="6"/>
+      <text class="num" x="274" y="64">02</text>
+      <text x="360" y="78" text-anchor="middle">Narrow Phase</text>
+      <text x="360" y="97" text-anchor="middle" class="sub">exact test + contact data</text>
+    </g>
+    <g class="stage" data-k="resolve" tabindex="0">
+      <rect x="505" y="42" width="205" height="74" rx="6"/>
+      <text class="num" x="521" y="64">03</text>
+      <text x="607" y="78" text-anchor="middle">Resolution</text>
+      <text x="607" y="97" text-anchor="middle" class="sub">impulses &amp; position fix</text>
+    </g>
+
+    <!-- straight connectors with small embedded arrowheads -->
+    <path class="flow" d="M 215 79 H 254"/>
+    <path class="arr" d="M 254 75 L 262 79 L 254 83 Z"/>
+    <path class="flow" d="M 463 79 H 501"/>
+    <path class="arr" d="M 501 75 L 509 79 L 501 83 Z"/>
+
+    <!-- warm-start loopback: dashed, orthogonal -->
+    <path class="flow loopback" d="M 607 42 V 22 H 112 V 40"/>
+    <path class="arr" d="M 108 34 L 112 41 L 116 34 Z"/>
+    <text x="360" y="16" text-anchor="middle" class="lloop">contact cache — warm start next frame</text>
+
+    <!-- support systems -->
+    <text x="10" y="146" class="syslabel">supporting systems</text>
+    <path class="flow" d="M 10 150 H 710" opacity=".35"/>
+
+    <g class="stage" data-k="accel" tabindex="0">
+      <rect x="10" y="160" width="205" height="64" rx="6"/>
+      <text x="112" y="188" text-anchor="middle">Accel Structures</text>
+      <text x="112" y="206" text-anchor="middle" class="sub">BVH · spatial hash · SAP</text>
+    </g>
+    <path class="flow" d="M 112 160 V 122"/>
+    <path class="arr" d="M 108 120 L 112 112 L 116 120 Z"/>
+
+    <g class="stage" data-k="shapes" tabindex="0">
+      <rect x="258" y="160" width="205" height="64" rx="6"/>
+      <text x="360" y="188" text-anchor="middle">Shape Primitives</text>
+      <text x="360" y="206" text-anchor="middle" class="sub">sphere · capsule · convex hull</text>
+    </g>
+    <path class="flow" d="M 360 160 V 122"/>
+    <path class="arr" d="M 356 120 L 360 112 L 364 120 Z"/>
+
+    <g class="stage" data-k="island" tabindex="0">
+      <rect x="505" y="160" width="205" height="64" rx="6"/>
+      <text x="607" y="188" text-anchor="middle">Island Builder</text>
+      <text x="607" y="206" text-anchor="middle" class="sub">group bodies · sleeping</text>
+    </g>
+    <path class="flow" d="M 607 160 V 122"/>
+    <path class="arr" d="M 603 120 L 607 112 L 611 120 Z"/>
+  </svg>
+
+  <!-- compact info block: title | what it does | key vocabulary -->
+  <div class="info" id="cdp-info"></div>
+  <div class="cap">hover or click a stage</div>
+
+  <script>
+  (function(){
+    var info={
+      broad:{
+        t:"01 · Broad Phase",d:"Cheap sweep that discards pairs which cannot possibly touch. Only bounding volumes (AABBs) are tested inside a spatial structure, reducing quadratic pair checks to near-linear. False positives are acceptable; false negatives are not.",
+        k:["AABB overlap","candidate pair list","O(n log n)"]},
+      narrow:{
+        t:"02 · Narrow Phase",d:"Exact geometric test on each surviving pair: SAT for polytopes, GJK/EPA for arbitrary convex shapes, closed-form tests for spheres, capsules, boxes. Output is a contact manifold — points, shared normal, penetration depth.",
+        k:["SAT","GJK / EPA","contact manifold"]},
+      resolve:{
+        t:"03 · Resolution",d:"The solver converts manifolds into impulses. Normal and friction impulses accumulate per contact over several iterations; a position pass removes residual penetration. Cached impulses from the previous frame seed the solver (warm starting) for stable stacks.",
+        k:["sequential impulses","Baumgarte / split impulse","warm start"]},
+      accel:{
+        t:"Acceleration Structures",d:"The data structure that carries the broad phase. Dynamic AABB tree for many moving bodies, BVH for static geometry, spatial hash grids for open worlds, sweep-and-prune for coherent motion.",
+        k:["dynamic AABB tree","spatial hash grid","sweep & prune"]},
+      shapes:{
+        t:"Shape Primitives",d:"Collision geometry is deliberately simple and convex — sphere, capsule, AABB/OBB, convex hull — because each admits a cheap support mapping. Concave meshes are decomposed (VHACD) or sampled as triangle soup.",
+        k:["support function","convex only","margin / radius"]},
+      island:{
+        t:"Island Builder",d:"Bodies connected by contacts or joints are grouped into islands and solved independently — trivially parallel across cores. Islands whose velocities fall below a threshold are put to sleep and skipped entirely.",
+        k:["union-find","parallel solve","sleeping"]}
+    };
+    var root=document.getElementById('cdp'),box=document.getElementById('cdp-info');
+    function show(k){var i=info[k];
+      box.innerHTML='<div class="it"><b>'+i.t+'</b><p>'+i.d+'</p></div>'+
+                    '<div class="it"><b></b><p class="keys">'+i.k.map(function(t){return t}).join(' <i>/</i> ')+'</p></div>';
+      root.querySelectorAll('.stage').forEach(function(s){s.classList.toggle('active',s.dataset.k===k)});
+    }
+    root.querySelectorAll('.stage').forEach(function(s){
+      s.addEventListener('mouseenter',function(){show(s.dataset.k)});
+      s.addEventListener('click',function(){show(s.dataset.k)});
+      s.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();show(s.dataset.k)}});
+    });
+    show('broad');
+  })();
+  </script>
+</div>
+
+</body>
+</html>
